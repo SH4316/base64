@@ -1,0 +1,452 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#101710" media="(prefers-color-scheme: dark)" />
+    <meta
+      name="description"
+      content="A simple, private Base64 encoder and decoder. Convert UTF-8 text and files, use URL-safe Base64, and copy or download your result. Everything stays in your browser."
+    />
+    <link rel="icon" type="image/svg+xml" href="./assets/favicon.svg" />
+    <title>Base64 — Encode. Decode. Done.</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="site-shell">
+      <main id="main" aria-label="Base64 encoder and decoder">
+        <section class="workbench" aria-label="Base64 converter">
+          <div class="editor-panel ">
+            <div class="editor-heading">
+              <div class="editor-title">
+                <label for="plain-text">Plain text</label><span class="format-tag">UTF-8</span>
+              </div>
+              <button
+                class="icon-button"
+                title="Copy plain text"
+                aria-label="Copy plain text"
+                disabled=""
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="17"
+                  height="17"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="lucide lucide-copy"
+                  aria-hidden="true"
+                >
+                  <rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect>
+                  <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
+                </svg>
+              </button>
+            </div>
+            <div class="editor-content">
+              <textarea
+                id="plain-text"
+                placeholder="Type or paste your text here…
+
+Hello, world!"
+                spellcheck="false"
+                autocapitalize="off"
+                autocorrect="off"
+                maxlength="13985112"
+                aria-describedby="text-hint"
+              ></textarea
+              ><button class="sample-button">
+                Try an example
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="lucide lucide-arrow-right"
+                  aria-hidden="true"
+                >
+                  <path d="M5 12h14"></path>
+                  <path d="m12 5 7 7-7 7"></path>
+                </svg>
+              </button>
+            </div>
+            <div class="editor-footer">
+              <div class="file-actions">
+                <button class="text-button">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="15"
+                    height="15"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="lucide lucide-file-up"
+                    aria-hidden="true"
+                  >
+                    <path
+                      d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"
+                    ></path>
+                    <path d="M14 2v5a1 1 0 0 0 1 1h5"></path>
+                    <path d="M12 12v6"></path>
+                    <path d="m15 15-3-3-3 3"></path></svg
+                  >Upload file</button
+                ><button
+                  class="icon-button download-button"
+                  aria-label="Download plain text or file"
+                  title="Download plain text or file"
+                  disabled=""
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="lucide lucide-arrow-down-to-line"
+                    aria-hidden="true"
+                  >
+                    <path d="M12 17V3"></path>
+                    <path d="m6 11 6 6 6-6"></path>
+                    <path d="M19 21H5"></path>
+                  </svg>
+                </button>
+              </div>
+              <span class="byte-count">0 B</span>
+            </div>
+            <input
+              class="visually-hidden"
+              aria-label="Upload source file"
+              tabindex="-1"
+              type="file"
+            />
+          </div>
+          <div class="conversion-controls">
+            <div class="direction-symbol" aria-hidden="true">
+              <span></span
+              ><svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="21"
+                height="21"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="lucide lucide-code-xml lucide-code-2"
+                aria-hidden="true"
+              >
+                <path d="m18 16 4-4-4-4"></path>
+                <path d="m6 8-4 4 4 4"></path>
+                <path d="m14.5 4-5 16"></path></svg
+              ><span></span>
+            </div>
+            <button class="convert-button primary" disabled="">
+              Encode
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="lucide lucide-arrow-right encode-arrow"
+                aria-hidden="true"
+              >
+                <path d="M5 12h14"></path>
+                <path d="m12 5 7 7-7 7"></path>
+              </svg></button
+            ><button class="convert-button secondary" disabled="">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="lucide lucide-arrow-left decode-arrow"
+                aria-hidden="true"
+              >
+                <path d="m12 19-7-7 7-7"></path>
+                <path d="M19 12H5"></path></svg
+              >Decode</button
+            ><span class="shortcut"><kbd>⌘</kbd> / <kbd>Ctrl</kbd> + <kbd>↵</kbd></span
+            ><button class="reset-button" disabled="">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="13"
+                height="13"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="lucide lucide-rotate-ccw"
+                aria-hidden="true"
+              >
+                <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+                <path d="M3 3v5h5"></path></svg
+              >Clear all
+            </button>
+          </div>
+          <div class="editor-panel ">
+            <div class="editor-heading">
+              <div class="editor-title">
+                <label for="base64-text">Base64</label><span class="format-tag">RFC 4648</span>
+              </div>
+              <button class="icon-button" title="Copy Base64" aria-label="Copy Base64" disabled="">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="17"
+                  height="17"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="lucide lucide-copy"
+                  aria-hidden="true"
+                >
+                  <rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect>
+                  <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
+                </svg>
+              </button>
+            </div>
+            <div class="editor-content">
+              <textarea
+                id="base64-text"
+                placeholder="Your Base64 goes here…
+
+Or paste a value to decode."
+                spellcheck="false"
+                autocapitalize="off"
+                autocorrect="off"
+                maxlength="13985112"
+                aria-describedby="text-hint"
+              ></textarea>
+            </div>
+            <div class="editor-footer">
+              <div class="file-actions">
+                <button class="text-button">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="15"
+                    height="15"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="lucide lucide-file-up"
+                    aria-hidden="true"
+                  >
+                    <path
+                      d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"
+                    ></path>
+                    <path d="M14 2v5a1 1 0 0 0 1 1h5"></path>
+                    <path d="M12 12v6"></path>
+                    <path d="m15 15-3-3-3 3"></path></svg
+                  >Upload Base64</button
+                ><button
+                  class="icon-button download-button"
+                  aria-label="Download Base64"
+                  title="Download Base64"
+                  disabled=""
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="lucide lucide-arrow-down-to-line"
+                    aria-hidden="true"
+                  >
+                    <path d="M12 17V3"></path>
+                    <path d="m6 11 6 6 6-6"></path>
+                    <path d="M19 21H5"></path>
+                  </svg>
+                </button>
+              </div>
+              <span class="byte-count">0 chars</span>
+            </div>
+            <input
+              class="visually-hidden"
+              aria-label="Upload Base64 file"
+              tabindex="-1"
+              type="file"
+              accept="text/*,.txt,.b64,.base64"
+            />
+          </div>
+        </section>
+        <p class="input-privacy">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="13"
+            height="13"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="lucide lucide-lock-keyhole"
+            aria-hidden="true"
+          >
+            <circle cx="12" cy="16" r="1"></circle>
+            <rect x="3" y="10" width="18" height="12" rx="2"></rect>
+            <path d="M7 10V7a5 5 0 0 1 10 0v3"></path></svg
+          >Your input is not sent to a server.
+        </p>
+        <div class="below-workbench">
+          <div class="options">
+            <span class="options-label">Encoding options</span
+            ><label class="checkbox-label"
+              ><input type="checkbox" />URL-safe<span class="option-detail">− _</span></label
+            ><label class="checkbox-label"
+              ><input type="checkbox" checked="" />Keep padding<span class="option-detail"
+                >=</span
+              ></label
+            >
+          </div>
+          <span class="file-limit" id="text-hint"
+            >Drop a file into either panel · up to 10 MiB decoded</span
+          >
+        </div>
+        <div class="feedback " role="status" aria-live="polite">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="lucide lucide-info"
+            aria-hidden="true"
+          >
+            <circle cx="12" cy="12" r="10"></circle>
+            <path d="M12 16v-4"></path>
+            <path d="M12 8h.01"></path></svg
+          ><span id="base64-hint"
+            >Both panels are editable. Use the arrows to choose your direction.</span
+          >
+        </div>
+        <section class="about-section" id="about" aria-label="About this tool">
+          <div class="privacy-note">
+            <span class="privacy-icon"
+              ><svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="22"
+                height="22"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="lucide lucide-shield-check"
+                aria-hidden="true"
+              >
+                <path
+                  d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"
+                ></path>
+                <path d="m9 12 2 2 4-4"></path></svg
+            ></span>
+            <div>
+              <h2>Your data stays with you.</h2>
+              <p>
+                Everything happens in your browser. No uploads to a server,<br
+                  class="desktop-break"
+                />
+                no saved history, no account needed.
+              </p>
+            </div>
+          </div>
+          <div class="format-note">
+            <h2>A few good things to know</h2>
+            <p>
+              UTF-8 text, emoji, and binary files are welcome. The decoder<br
+                class="desktop-break"
+              />
+              accepts standard Base64, URL-safe Base64, and data URLs.
+            </p>
+          </div>
+        </section>
+        <details class="help">
+          <summary>
+            What is Base64?<svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="15"
+              height="15"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="lucide lucide-chevron-down"
+              aria-hidden="true"
+            >
+              <path d="m6 9 6 6 6-6"></path>
+            </svg>
+          </summary>
+          <div>
+            <p>
+              Base64 represents binary data using a set of 64 text characters. It is useful for
+              moving files or text through systems that only accept text. Encoded output is usually
+              about one-third larger than the original.
+            </p>
+            <p>
+              Base64 is an encoding, not encryption. Anyone can decode it. The URL-safe option uses
+              <code>-</code> and <code>_</code> instead of <code>+</code> and <code>/</code>. Keep
+              padding adds trailing <code>=</code> characters when needed. These options apply when
+              you select Encode; the decoder accepts either alphabet and optional padding.
+            </p>
+            <p>
+              Paste text on the left and select Encode, or paste Base64 on the right and select
+              Decode. You can also upload or drop a file into either panel. Binary results can be
+              downloaded from the left panel. Use Ctrl+Enter (⌘+Enter on Mac) inside a panel to
+              convert its contents.
+            </p>
+          </div>
+        </details>
+      </main>
+      <footer class="site-footer">
+        <span>Less friction. More getting things done.</span
+        ><span>Made for the in-between tasks. <a href="./THIRD-PARTY-NOTICES.txt">Licenses</a></span>
+      </footer>
+    </div>
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>
