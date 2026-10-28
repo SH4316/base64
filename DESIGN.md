@@ -4,7 +4,21 @@ An English utility with two editable panels and explicit conversion controls bet
 
 The user requested a tool-focused surface: the editors begin at the top with 32px desktop and 20px mobile spacing. The site header, display heading, subtitle, and local-processing badge have been removed.
 
-The visual system matches the blog: white ground, deep green text, teal actions, lime-tinted surfaces, fine separators and 8px editor corners. IBM Plex Sans 5.3.0 is self-hosted for the UI; JetBrains Mono remains for code. Visible type has a 12px floor. Dark mode follows the system preference using the blog’s deep green surfaces and yellow-green accent. Inline SVG icons and local assets require no external requests.
+The visual system inherits the current blog palette in `../blog/app/styles/global.css`: white ground, navy text, blue actions, pale blue surfaces, fine separators and 8px editor corners. Editor headings use the blog’s surface color, and editor bodies use its code background. IBM Plex Sans 5.3.0 is self-hosted for the UI; JetBrains Mono remains for code. Visible type has a 12px floor. Dark mode follows the system preference using the blog’s deep navy surfaces and light blue accent. Selection, focus, checkboxes and the blue-and-white favicon follow the same palette. Inline SVG icons and local assets require no external requests.
+
+| Token | Light | Dark |
+| --- | --- | --- |
+| Background | `#ffffff` | `#101827` |
+| Surface / editor heading | `#edf3fc` | `#16243a` |
+| Code background | `#f7f9fd` | `#0d1625` |
+| Text | `#182741` | `#e5edf9` |
+| Muted text | `#536581` | `#9aacc6` |
+| Border | `#dbe4f2` | `#283b58` |
+| Accent | `#1d4ed8` | `#91c5fc` |
+| Accent surface | `#e6efff` | `#1c3151` |
+| Accent hover | `#2563eb` | `#b4d8fd` |
+| Text on accent | `#ffffff` | `#101827` |
+| Text selection | `#d5e8ff` | `#244e80` |
 
 Desktop keeps the editors side by side. At 720px and below the text editor, conversion buttons, and Base64 editor stack vertically, with the arrows rotating to match. Persistent privacy copy directly below the editors reads “Your input is not sent to a server.”
 
