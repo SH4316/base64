@@ -7,15 +7,28 @@
     <meta name="theme-color" content="#101827" media="(prefers-color-scheme: dark)" />
     <meta
       name="description"
-      content="A simple, private Base64 encoder and decoder. Convert UTF-8 text and files, use URL-safe Base64, and copy or download your result. Everything stays in your browser."
+      content="Convert text and files to and from Base64, detect or select a character encoding, and copy or download your result. Everything stays in your browser."
     />
-    <link rel="icon" type="image/svg+xml" href="./assets/favicon.svg" />
+    <link rel="icon" type="image/svg+xml" href="./assets/favicon.svg?v=20261028-64" />
     <title>Base64 — Encode. Decode. Done.</title>
     <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
     <div class="site-shell">
       <main id="main" aria-label="Base64 encoder and decoder">
+        <div class="encoding-toolbar">
+          <div class="encoding-field">
+            <label for="text-encoding">Text encoding</label>
+            <select id="text-encoding" aria-describedby="encoding-status">
+              <option value="auto">Auto-detect</option>
+              <option value="utf-8">UTF-8</option>
+              <option value="binary">Binary (HEX)</option>
+            </select>
+          </div>
+          <p id="encoding-status" class="encoding-status" role="status" aria-live="polite">
+            Auto-detect files and decoded bytes. New text uses UTF-8.
+          </p>
+        </div>
         <section class="workbench" aria-label="Base64 converter">
           <div class="editor-panel ">
             <div class="editor-heading">
@@ -328,7 +341,7 @@ Or paste a value to decode."
         </p>
         <div class="below-workbench">
           <div class="options">
-            <span class="options-label">Encoding options</span
+            <span class="options-label">Base64 options</span
             ><label class="checkbox-label"
               ><input type="checkbox" />URL-safe<span class="option-detail">− _</span></label
             ><label class="checkbox-label"
@@ -359,89 +372,9 @@ Or paste a value to decode."
             <path d="M12 16v-4"></path>
             <path d="M12 8h.01"></path></svg
           ><span id="base64-hint"
-            >Both panels are editable. Use the arrows to choose your direction.</span
+            >Use Encode or Decode to choose your conversion direction.</span
           >
         </div>
-        <section class="about-section" id="about" aria-label="About this tool">
-          <div class="privacy-note">
-            <span class="privacy-icon"
-              ><svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="22"
-                height="22"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="1.7"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                class="lucide lucide-shield-check"
-                aria-hidden="true"
-              >
-                <path
-                  d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"
-                ></path>
-                <path d="m9 12 2 2 4-4"></path></svg
-            ></span>
-            <div>
-              <h2>Your data stays with you.</h2>
-              <p>
-                Everything happens in your browser. No uploads to a server,<br
-                  class="desktop-break"
-                />
-                no saved history, no account needed.
-              </p>
-            </div>
-          </div>
-          <div class="format-note">
-            <h2>A few good things to know</h2>
-            <p>
-              UTF-8 text, emoji, and binary files are welcome. The decoder<br
-                class="desktop-break"
-              />
-              accepts standard Base64, URL-safe Base64, and data URLs.
-            </p>
-          </div>
-        </section>
-        <details class="help">
-          <summary>
-            What is Base64?<svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="15"
-              height="15"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              class="lucide lucide-chevron-down"
-              aria-hidden="true"
-            >
-              <path d="m6 9 6 6 6-6"></path>
-            </svg>
-          </summary>
-          <div>
-            <p>
-              Base64 represents binary data using a set of 64 text characters. It is useful for
-              moving files or text through systems that only accept text. Encoded output is usually
-              about one-third larger than the original.
-            </p>
-            <p>
-              Base64 is an encoding, not encryption. Anyone can decode it. The URL-safe option uses
-              <code>-</code> and <code>_</code> instead of <code>+</code> and <code>/</code>. Keep
-              padding adds trailing <code>=</code> characters when needed. These options apply when
-              you select Encode; the decoder accepts either alphabet and optional padding.
-            </p>
-            <p>
-              Paste text on the left and select Encode, or paste Base64 on the right and select
-              Decode. You can also upload or drop a file into either panel. Binary data is shown as
-              read-only hex on the left. Copy copies the hex; download and Encode use the original
-              bytes. Use Ctrl+Enter (⌘+Enter on Mac) inside a panel to
-              convert its contents.
-            </p>
-          </div>
-        </details>
       </main>
       <footer class="site-footer">
         <span>Less friction. More getting things done.</span

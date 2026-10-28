@@ -29,3 +29,47 @@ been adapted to this application's controls. No Lucide runtime is shipped.
 
 Development-only tools such as Playwright are not part of this static site's
 runtime distribution. Their licenses remain with the installed npm packages.
+
+Offline character codecs and statistical detector
+
+The browser bundle vendor/codecs.js is bundled/minified from these exact
+packages, including every bundled transitive dependency. Complete, unmodified
+copyright and license texts are preserved under vendor/licenses/; generated
+legal comments are in vendor/codecs.js.LEGAL.txt. All permit commercial use
+and redistribution without requiring disclosure of this application's source.
+
+iconv-lite 0.7.3 — MIT
+  https://github.com/pillarjs/iconv-lite/tree/v0.7.3
+  vendor/licenses/iconv-lite-LICENSE
+chardet 2.2.0 — MIT
+  https://github.com/runk/node-chardet/tree/v2.2.0
+  vendor/licenses/chardet-LICENSE
+buffer 6.0.3 — MIT
+  https://github.com/feross/buffer/tree/v6.0.3
+  vendor/licenses/buffer-LICENSE and buffer-AUTHORS.md
+base64-js 1.5.1 — MIT (buffer dependency)
+  vendor/licenses/base64-js-LICENSE
+ieee754 1.2.1 — BSD-3-Clause (buffer dependency)
+  vendor/licenses/ieee754-LICENSE
+safer-buffer 2.1.2 — MIT (iconv-lite dependency)
+  vendor/licenses/safer-buffer-LICENSE
+string_decoder 1.3.0 — MIT (browser shim for iconv-lite)
+  vendor/licenses/string_decoder-LICENSE
+safe-buffer 5.2.1 — MIT (string_decoder dependency)
+  vendor/licenses/safe-buffer-LICENSE
+
+The runtime dependency graph is iconv-lite → safer-buffer → buffer,
+iconv-lite → string_decoder → safe-buffer → buffer, and
+buffer → base64-js + ieee754. chardet has no runtime dependencies.
+Browser shims replace Node's built-in Buffer and string_decoder; no Node
+runtime, filesystem API, network request or remote CDN is required.
+
+vendor/manifest.json records exact bundled versions and SHA-256 checksums
+of the bundle and all notice files. The build checks source and distribution
+copies, installed versions and licenses, and required notice references.
+Run npm run vendor:codecs after a reviewed dependency update.
+
+esbuild 0.28.2 — MIT (development-only bundler, not shipped)
+  https://github.com/evanw/esbuild/tree/v0.28.2
+  node_modules/esbuild/LICENSE.md
+  Its matching platform binary @esbuild/linux-x64 0.28.2 is also MIT-licensed.

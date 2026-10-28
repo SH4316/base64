@@ -1,11 +1,13 @@
 import { createHash } from 'node:crypto'
 import { readFile } from 'node:fs/promises'
 import { cp, mkdir, rm, access } from 'node:fs/promises'
+import { verifyCodecs } from './verify-codecs.mjs'
 
 await access('index.html')
+await verifyCodecs()
 await rm('dist', { recursive: true, force: true })
 await mkdir('dist')
-for (const path of ['index.html', 'styles.css', 'app.js', 'converter.worker.js', 'lib', 'assets', '_headers', 'LICENSE', 'THIRD-PARTY-NOTICES.txt']) {
+for (const path of ['index.html', 'styles.css', 'app.js', 'converter.worker.js', 'lib', 'vendor', 'assets', '_headers', 'LICENSE', 'THIRD-PARTY-NOTICES.txt']) {
   await cp(path, `dist/${path}`, { recursive: true })
 }
 console.log('Static HTML, CSS, and JavaScript copied to dist/. No bundler required.')
@@ -22,3 +24,5 @@ for (const root of ['.', 'dist']) {
   if (!license.includes('Copyright 2019 IBM Corp.') || !license.includes('SIL OPEN FONT LICENSE Version 1.1') || !notices.includes('e2291e842cf5af167122a22881a740c7f2dda7716f1e8cd76680264f4a859470')) throw new Error('Required IBM Plex Sans notices are missing.')
 }
 console.log('Verified IBM Plex Sans checksum and redistribution notices.')
+await verifyCodecs('dist')
+console.log('Verified offline codec versions, checksums, and all direct/transitive redistribution notices.')

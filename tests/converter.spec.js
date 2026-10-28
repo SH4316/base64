@@ -35,7 +35,7 @@ test('shows and copies binary hex while encoding and downloading the original by
   await page.getByRole('button', { name: 'Encode', exact: true }).click()
   await expect(page.getByLabel('Base64', { exact: true })).toHaveValue(bytes.toString('base64url'))
   await page.getByRole('button', { name: 'Decode', exact: true }).click()
-  await expect(page.getByRole('status')).toContainText('Decoded binary data')
+  await expect(page.locator('.feedback')).toContainText('Decoded binary data')
   await expect(hex).toHaveValue('00 FF FB 80 2A')
   await page.getByLabel('Base64', { exact: true }).fill('')
   await page.getByRole('button', { name: 'Encode', exact: true }).click()
@@ -56,12 +56,11 @@ test('shows and copies binary hex while encoding and downloading the original by
   await expect(page.getByRole('button', { name: 'Copy plain text', exact: true })).toBeEnabled()
 })
 
-test('previews control bytes and UTF-16 as hex and resets the binary view', async ({ page }) => {
+test('previews control bytes as hex and resets the binary view', async ({ page }) => {
   await page.goto('/')
   const encoded = page.getByLabel('Base64', { exact: true })
   for (const [value, expected] of [
     ['aGVsbG8A', '68 65 6C 6C 6F 00'],
-    ['aABlAGwAbABvAA==', '68 00 65 00 6C 00 6C 00 6F 00'],
     ['AAECAwQFBgcICQoLDA0ODxA=', '00 01 02 03 04 05 06 07 08 09 0A 0B 0C 0D 0E 0F\n10'],
   ]) {
     await encoded.fill(value)
@@ -80,10 +79,10 @@ test('previews control bytes and UTF-16 as hex and resets the binary view', asyn
   await expect(encoded).toHaveValue('')
 })
 
-test('example, keyboard shortcuts, clipboard, and clear work without sending input', async ({ page, context }) => {
+test('example, keyboard shortcuts, clipboard, and clear work without sending input', async ({ page, context, baseURL }) => {
   await context.grantPermissions(['clipboard-read', 'clipboard-write'])
   const externalRequests           = []
-  page.on('request', request => { if (!request.url().startsWith('http://127.0.0.1:4173/')) externalRequests.push(request.url()); expect(request.method()).toBe('GET') })
+  page.on('request', request => { if (!request.url().startsWith(`${baseURL}/`)) externalRequests.push(request.url()); expect(request.method()).toBe('GET') })
   await page.goto('/')
   await page.getByRole('button', { name: 'Try an example' }).click()
   const plain = page.getByLabel('Plain text', { exact: true })
