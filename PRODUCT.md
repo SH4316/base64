@@ -16,5 +16,6 @@ Encode and decode Base64 in the browser. The user confirmed an English interface
 - Input is processed locally and is not persisted.
 - The user requested the visible English notice: “Your input is not sent to a server.”
 - Implementation scope: UTF-8 text, binary files, standard and URL-safe Base64, padding, copy and download.
+- Binary uploads and decoded results display read-only hexadecimal bytes. Copy uses the displayed hex; download and Encode preserve the original bytes.
 - Assumed audience: people who need a quick developer utility. No audience or brand assets were supplied.
 - Responsive and keyboard-accessible controls.

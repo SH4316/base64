@@ -17,17 +17,29 @@ test('encodes and decodes Unicode through the center buttons', async ({ page }) 
   await expect(plain).toHaveValue('안녕하세요 👋')
 })
 
-test('uploads binary files and downloads the original decoded bytes', async ({ page }) => {
+test('shows and copies binary hex while encoding and downloading the original bytes', async ({ page, context }) => {
+  await context.grantPermissions(['clipboard-read', 'clipboard-write'])
   await page.goto('/')
   const bytes = Buffer.from([0, 255, 251, 128, 42])
   await page.getByLabel('Upload source file', { exact: true }).setInputFiles({ name: 'sample.bin', mimeType: 'application/octet-stream', buffer: bytes })
   await expect(page.getByText('sample.bin', { exact: true })).toBeVisible()
+  const hex = page.getByLabel('Binary data', { exact: true })
+  await expect(hex).toHaveValue('00 FF FB 80 2A')
+  await expect(hex).toHaveAttribute('readonly', '')
+  await expect(page.locator('.format-tag').first()).toHaveText('HEX')
+  await expect(page.locator('.byte-count').first()).toHaveText('5 B')
+  await page.getByRole('button', { name: 'Copy hex', exact: true }).click()
+  expect(await page.evaluate(() => navigator.clipboard.readText())).toBe('00 FF FB 80 2A')
   await page.getByRole('checkbox', { name: 'URL-safe' }).check()
   await page.getByRole('checkbox', { name: 'Keep padding' }).uncheck()
   await page.getByRole('button', { name: 'Encode', exact: true }).click()
   await expect(page.getByLabel('Base64', { exact: true })).toHaveValue(bytes.toString('base64url'))
   await page.getByRole('button', { name: 'Decode', exact: true }).click()
-  await expect(page.getByRole('status')).toContainText('Decoded a binary file')
+  await expect(page.getByRole('status')).toContainText('Decoded binary data')
+  await expect(hex).toHaveValue('00 FF FB 80 2A')
+  await page.getByLabel('Base64', { exact: true }).fill('')
+  await page.getByRole('button', { name: 'Encode', exact: true }).click()
+  await expect(page.getByLabel('Base64', { exact: true })).toHaveValue(bytes.toString('base64url'))
   const downloadEvent = page.waitForEvent('download')
   await page.getByRole('button', { name: 'Download plain text or file', exact: true }).click()
   const download = await downloadEvent
@@ -36,6 +48,36 @@ test('uploads binary files and downloads the original decoded bytes', async ({ p
   const chunks           = []
   for await (const chunk of stream ) chunks.push(Buffer.from(chunk))
   expect(Buffer.concat(chunks)).toEqual(bytes)
+  await page.getByLabel('Base64', { exact: true }).fill('aGVsbG8=')
+  await page.getByRole('button', { name: 'Decode', exact: true }).click()
+  await expect(page.getByLabel('Plain text', { exact: true })).toHaveValue('hello')
+  await expect(page.getByLabel('Plain text', { exact: true })).toBeEditable()
+  await expect(page.locator('.format-tag').first()).toHaveText('UTF-8')
+  await expect(page.getByRole('button', { name: 'Copy plain text', exact: true })).toBeEnabled()
+})
+
+test('previews control bytes and UTF-16 as hex and resets the binary view', async ({ page }) => {
+  await page.goto('/')
+  const encoded = page.getByLabel('Base64', { exact: true })
+  for (const [value, expected] of [
+    ['aGVsbG8A', '68 65 6C 6C 6F 00'],
+    ['aABlAGwAbABvAA==', '68 00 65 00 6C 00 6C 00 6F 00'],
+    ['AAECAwQFBgcICQoLDA0ODxA=', '00 01 02 03 04 05 06 07 08 09 0A 0B 0C 0D 0E 0F\n10'],
+  ]) {
+    await encoded.fill(value)
+    await page.getByRole('button', { name: 'Decode', exact: true }).click()
+    await expect(page.getByLabel('Binary data', { exact: true })).toHaveValue(expected)
+    await page.getByRole('button', { name: 'Remove file', exact: true }).click()
+    await expect(page.getByLabel('Plain text', { exact: true })).toHaveValue('')
+    await expect(page.getByLabel('Plain text', { exact: true })).toBeEditable()
+    await expect(page.locator('.format-tag').first()).toHaveText('UTF-8')
+  }
+  await page.getByRole('button', { name: 'Decode', exact: true }).click()
+  await expect(page.getByLabel('Binary data', { exact: true })).toBeVisible()
+  await page.getByRole('button', { name: 'Clear all', exact: true }).click()
+  await expect(page.getByLabel('Plain text', { exact: true })).toHaveValue('')
+  await expect(page.getByLabel('Plain text', { exact: true })).toBeEditable()
+  await expect(encoded).toHaveValue('')
 })
 
 test('example, keyboard shortcuts, clipboard, and clear work without sending input', async ({ page, context }) => {
@@ -69,5 +111,9 @@ test('keeps the editor order and all actions usable on narrow screens', async ({
   const positions = await Promise.all([plain.boundingBox(), encode.boundingBox(), encoded.boundingBox()])
   expect(positions[0] .y).toBeLessThan(positions[1] .y)
   expect(positions[1] .y).toBeLessThan(positions[2] .y)
+  await encoded.fill('AAECAwQFBgcICQoLDA0ODxA=')
+  await page.getByRole('button', { name: 'Decode', exact: true }).click()
+  await expect(page.getByLabel('Binary data', { exact: true })).toHaveValue('00 01 02 03 04 05 06 07 08 09 0A 0B 0C 0D 0E 0F\n10')
+  await expect(page.getByRole('button', { name: 'Copy hex', exact: true })).toBeEnabled()
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true)
 })

@@ -1,6 +1,6 @@
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
-import { decodeBase64, encodeBase64, readUtf8, MAX_BYTES } from '../lib/base64.js'
+import { decodeBase64, encodeBase64, formatHex, readUtf8, MAX_BYTES } from '../lib/base64.js'
 const utf8 = value => new TextEncoder().encode(value)
 
 for (const [plain, encoded] of [['',''],['f','Zg=='],['fo','Zm8='],['foo','Zm9v'],['foobar','Zm9vYmFy']]) {
@@ -32,5 +32,14 @@ test('recognizes binary controls and invalid UTF-8', () => {
   assert.equal(readUtf8(new Uint8Array([255])), null)
   assert.equal(readUtf8(new Uint8Array([0])), null)
   assert.equal(readUtf8(utf8('line\n\ttab')), 'line\n\ttab')
+})
+test('formats binary bytes as uppercase, zero-padded hex', () => {
+  assert.equal(formatHex(new Uint8Array([0, 1, 15, 16, 127, 128, 171, 255])), '00 01 0F 10 7F 80 AB FF')
+  assert.equal(formatHex(new Uint8Array()), '')
+})
+test('wraps hex at 16 bytes without trailing spaces or an extra line', () => {
+  const bytes = Uint8Array.from({ length: 17 }, (_, index) => index)
+  assert.equal(formatHex(bytes.subarray(0, 16)), '00 01 02 03 04 05 06 07 08 09 0A 0B 0C 0D 0E 0F')
+  assert.equal(formatHex(bytes), '00 01 02 03 04 05 06 07 08 09 0A 0B 0C 0D 0E 0F\n10')
 })
 test('enforces the input size limit', () => assert.throws(() => encodeBase64(new Uint8Array(MAX_BYTES + 1)), /too large/))

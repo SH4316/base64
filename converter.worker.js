@@ -1,4 +1,4 @@
-import { decodeBase64, encodeBase64, readUtf8 } from './lib/base64.js'
+import { decodeBase64, encodeBase64, formatHex, readUtf8 } from './lib/base64.js'
 
                                  
             
@@ -20,7 +20,8 @@ self.onmessage = ({ data }                                 ) => {
       self.postMessage({ id: data.id, direction: 'encode', value: encodeBase64(bytes, data.urlSafe, data.padding) }                           )
     } else {
       const bytes = decodeBase64(String(data.input))
-      const result                   = { id: data.id, direction: 'decode', bytes, text: readUtf8(bytes) }
+      const text = readUtf8(bytes)
+      const result = { id: data.id, direction: 'decode', bytes, text, hex: text === null ? formatHex(bytes) : null }
       self.postMessage(result, { transfer: [bytes.buffer] })
     }
   } catch (error) {

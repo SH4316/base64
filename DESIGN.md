@@ -23,3 +23,5 @@ The visual system inherits the current blog palette in `../blog/app/styles/globa
 Desktop keeps the editors side by side. At 720px and below the text editor, conversion buttons, and Base64 editor stack vertically, with the arrows rotating to match. Persistent privacy copy directly below the editors reads “Your input is not sent to a server.”
 
 Empty editors expose placeholders and an optional sample. Loading, validation, success, disabled, hover, focus and file-drop states are explicit. Validation preserves existing output on failure. No entry animation is used; reduced motion disables the loading animation. Inputs are never persisted.
+
+Binary uploads and decoded results reuse the left editor as a read-only hex view, labeled “Binary data” with a “HEX” format tag. Bytes use uppercase two-digit hex separated by spaces, with 16 bytes per line. Copy copies the displayed hex, while Encode and download use the original bytes. Clearing or removing the binary restores the plain-text editor.

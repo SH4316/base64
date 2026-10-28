@@ -1,4 +1,4 @@
-import { formatBytes, MAX_BASE64_LENGTH, MAX_BYTES, readUtf8 } from './lib/base64.js'
+import { formatBytes, formatHex, MAX_BASE64_LENGTH, MAX_BYTES, readUtf8 } from './lib/base64.js'
 
 const $ = (selector) => document.querySelector(selector)
 const text = $('#plain-text')
@@ -32,18 +32,23 @@ function notify(kind, message) {
 
 function render() {
   const hasText = Boolean(text.value || source)
+  const binary = Boolean(source?.binary)
   encode.disabled = !hasText || Boolean(busy) || !worker
   decode.disabled = !base64.value.trim() || Boolean(busy) || !worker
   encode.setAttribute('aria-busy', String(busy === 'encode'))
   decode.setAttribute('aria-busy', String(busy === 'decode'))
   clear.disabled = !hasText && !base64.value && !busy
-  copyText.disabled = !text.value || Boolean(source?.binary)
+  copyText.disabled = !text.value
+  const copyLabel = binary ? 'Copy hex' : 'Copy plain text'
+  copyText.setAttribute('aria-label', copyLabel)
+  copyText.title = copyLabel
   copyBase64.disabled = !base64.value
   downloadText.disabled = !hasText
   downloadBase64.disabled = !base64.value
   uploads.forEach(button => { button.disabled = busy === 'file' })
-  text.readOnly = source?.binary ?? false
-  text.placeholder = source?.binary ? 'Binary file ready.\nSelect Encode to convert it to Base64.' : 'Type or paste your text here…\n\nHello, world!'
+  text.readOnly = binary
+  panels[0].querySelector('label').textContent = binary ? 'Binary data' : 'Plain text'
+  panels[0].querySelector('.format-tag').textContent = binary ? 'HEX' : 'UTF-8'
   example.hidden = hasText
   counters[0].textContent = formatBytes(source?.bytes.length ?? new TextEncoder().encode(text.value).length)
   counters[1].textContent = `${base64.value.length.toLocaleString('en-US')} chars`
@@ -68,7 +73,7 @@ function render() {
 function invalidate() {
   requestId++
   busy = null
-  notify('', 'Both panels are editable. Use the arrows to choose your direction.')
+  notify('', 'Use Encode or Decode to choose your conversion direction.')
 }
 
 function convert(direction) {
@@ -87,9 +92,9 @@ try {
     if (data.direction === 'error') notify('error', data.error)
     else if (data.direction === 'encode') { base64.value = data.value; notify('success', 'Encoded. Your Base64 is ready.') }
     else {
-      text.value = data.text ?? ''
+      text.value = data.text ?? data.hex
       source = { name: data.text === null ? 'decoded.bin' : 'decoded.txt', bytes: data.bytes, binary: data.text === null }
-      notify('success', data.text === null ? 'Decoded a binary file. Download it from the left panel.' : 'Decoded. Your text is ready.')
+      notify('success', data.text === null ? 'Decoded binary data. Hex is shown on the left; download saves the original bytes.' : 'Decoded. Your text is ready.')
     }
     render()
   }
@@ -107,10 +112,10 @@ async function loadFile(file, target) {
     const bytes = new Uint8Array(await file.arrayBuffer())
     if (id !== requestId) return
     const value = readUtf8(bytes)
-    if (target === 0) { text.value = value ?? ''; source = { name: file.name, bytes, binary: value === null } }
+    if (target === 0) { text.value = value ?? formatHex(bytes); source = { name: file.name, bytes, binary: value === null } }
     else { if (value === null) throw new Error('This file is not UTF-8 text. Upload a text file containing Base64.'); base64.value = value }
     busy = null
-    notify('success', `“${file.name}” loaded. Select ${target === 0 ? 'Encode' : 'Decode'} to convert it.`)
+    notify('success', `“${file.name}” loaded.${target === 0 && value === null ? ' Hex is shown on the left.' : ''} Select ${target === 0 ? 'Encode' : 'Decode'} to convert it.`)
   } catch (error) { if (id !== requestId) return; busy = null; notify('error', error.message || 'Could not read this file.') }
   render()
 }

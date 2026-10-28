@@ -18,6 +18,7 @@ npm run dev
 
 - 두 입력칸 모두 편집 가능: 왼쪽 → Encode → 오른쪽, 오른쪽 → Decode → 왼쪽
 - UTF-8, 한글, 이모지, 바이너리 파일 변환
+- 바이너리 결과·업로드는 왼쪽 칸에 읽기 전용 HEX로 표시: 바이트마다 대문자 2자리, 공백 구분, 한 줄에 16바이트. 복사는 HEX 문자열을, 다운로드와 재인코딩은 원본 바이트를 사용
 - 업로드·드롭, 복사·다운로드, Ctrl+Enter / ⌘+Enter
 - URL-safe 및 padding 옵션, data URL, 공백·줄바꿈 입력 지원
 - 잘못된 입력 검증, 바이너리 결과 다운로드, 원본·디코딩 파일 10 MiB 제한
@@ -56,7 +57,7 @@ npx playwright install chromium
 npm run test:e2e
 ```
 
-Node 기본 테스트 러너로 25개 변환 테스트, Playwright로 4개 브라우저 테스트를 실행합니다. 로컬 서버도 `_headers`를 적용하므로 CSP가 활성화된 상태로 검사합니다.
+Node 기본 테스트 러너로 변환·HEX 포맷을, Playwright로 브라우저에서의 변환·복사·다운로드와 모바일 레이아웃을 검증합니다. 로컬 서버도 `_headers`를 적용하므로 CSP가 활성화된 상태로 검사합니다.
 
 ## 구조
 
